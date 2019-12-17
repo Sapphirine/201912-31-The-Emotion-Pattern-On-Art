@@ -1,0 +1,31 @@
+{%  extends "layout.html" %}
+{% block head %}
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'artist.js') }}"></script>
+    <script>
+        let artist_names = {{artist_names|tojson}};
+    </script>
+    <style>
+        #artist_menu_div {
+            padding-left: 30px;
+        }
+
+        #artist_chart {
+            padding-left: 300px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    <div id="artist_menu_div">
+        <select id="artist_menu">
+
+        </select>
+    </div>
+    <!-- Create a div where the graph will take place -->
+    <div id="artist_chart"></div>
+{% endblock %}

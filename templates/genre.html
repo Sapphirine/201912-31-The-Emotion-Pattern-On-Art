@@ -1,0 +1,164 @@
+{%  extends "layout.html" %}
+{% block head %}
+		<title>Genre</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<!-- Google fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+		<!-- D3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+{#        <script src="https://d3js.org/d3.v4.min.js"></script>#}
+        <script>
+            let genres = {{genres|tojson}};
+        </script>
+		<style>
+			.radarChart {
+				font-weight: 300;
+				fill: #242424;
+				text-align: center;
+				text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+				cursor: default;
+			}
+
+			.legend {
+				font-family: 'Raleway', sans-serif;
+				fill: #333333;
+			}
+
+			.tooltip {
+				fill: #333333;
+			}
+
+            #genre_choice {
+                position:absolute;
+                left:100px;
+            }
+
+		</style>
+
+{% endblock %}
+
+{% block content %}
+        <div id="genre_choice">
+
+        </div>
+
+		<div class="radarChart"></div>
+
+        <script type="text/javascript" src="{{ url_for('static', filename = 'genre.js') }}"></script>
+		<script>
+            for (let i=0; i<genres.length; i++){
+                let new_div = $('<div></div>');
+                let new_input = $("<input type='checkbox'/>");
+                let new_label = $('<label></label>');
+                if (i === 0){
+                    new_input.prop('checked', true)
+                }
+
+                new_input.attr('name', genres[i]);
+                new_label.attr('for', genres[i]);
+                new_input.val(genres[i]);
+                new_label.text(genres[i]);
+                new_div.append(new_input);
+                new_div.append(new_label);
+                $('#genre_choice').append(new_div);
+            }
+
+            const emotions = ["Amusement", "Anger", "Awe", "Content", "Disgust", "Excitement", "Fear", "Sad"];
+
+            const margin = {top: 100, right: 100, bottom: 100, left: 100},
+            width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+            height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+
+            {#let color = d3.scale.ordinal()#}
+			{#	.range(["#EDC951","#CC333F","#00A0B0"]);#}
+            let color = d3.scale.ordinal().range(['CC0000', 'FF3399', '660033',
+                'FFCCCC', 'FF9933', 'FFB266',
+                'FFCC99', '33FF33', '33FF99',
+                'FFFF66',
+                '33FFFF', '9999FF', '9933FF',
+                '3333FF', 'FFE5CC', 'FFFF33',
+                'FF33FF', '3399FF', '3399FF',
+                'FF6666', 'FF9999',]);
+            let radarChartOptions = {
+              w: width,
+              h: height,
+              margin: margin,
+              maxValue: 0.3,
+              levels: 5,
+              roundStrokes: true,
+              color: color
+            };
+            let genres_chosen = [];
+
+            $('#genre_choice').change(function(){
+                genres_chosen = [];
+                $("div input:checked").each(function(){
+                    {#console.log($(this).val());#}
+                    genres_chosen.push($(this).val());
+                    console.log('genres before sort');
+                    console.log(genres_chosen);
+                    genres_chosen.sort();
+                    console.log('genres chosen');
+                    console.log(genres_chosen);
+                });
+
+
+
+                // load data based on genre choices
+                const data_directory = '../static/genre_emotion/';
+                let data_chosen = [];
+                if (genres_chosen.length !== 0){
+                    for (let i=0; i<genres_chosen.length; i++) {
+                        let datum_chosen = [];
+                        d3.csv(data_directory+genres_chosen[i].split(' ').join('_')+'_scores.csv', function(d){
+                            d.forEach(function(d){
+                                for(let j=0; j<emotions.length; j++) {
+                                    let d2 = {};
+                                    d2['axis'] = emotions[j];
+                                    d2['value'] = +d[emotions[j]];
+                                    d2['genre'] = genres_chosen[i];
+                                    datum_chosen.push(d2);
+                                }
+                                data_chosen.push(datum_chosen);
+                            });
+
+                            if (i === genres_chosen.length-1){
+                                console.log('data chosen:');
+                                console.log(data_chosen);
+
+                                if (data_chosen.length !== 0){
+                                     //Call function to draw the Radar chart
+                                    RadarChart(".radarChart", data_chosen, radarChartOptions, genres);
+                                } else {
+                                    d3.select(".radarChart").select("svg").remove();
+                                }
+                            }
+
+                        });
+                    }
+                } else {
+                    d3.select(".radarChart").select("svg").remove();
+                }
+
+
+            });
+
+            let default_data = [];
+            d3.csv('../static/genre_emotion/'+genres[0].split(' ').join('_')+'_scores.csv', function(d) {
+                d.forEach(function (d) {
+                    for (let i = 0; i < emotions.length; i++) {
+                        let d2 = {};
+                        d2['axis'] = emotions[i];
+                        d2['value'] = +d[emotions[i]];
+                        d2['genre'] = genres[0];
+                        default_data.push(d2);
+                    }
+                });
+                RadarChart(".radarChart", [default_data], radarChartOptions, genres);
+
+            });
+
+		</script>
+{% endblock %}

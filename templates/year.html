@@ -1,0 +1,53 @@
+{%  extends "layout.html" %}
+{% block head %}
+    <title>Year</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'year.js') }}"></script>
+    <style>
+        .outer_div {
+            padding-left: 200px;
+        }
+
+        #emotion_btn {
+            padding-left: 50px;
+        }
+
+        #year_chart {
+            padding-top: 100px;
+        }
+
+        #emotion_btn label {
+            margin-right: 30px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="outer_div">
+        <form id="emotion_btn">
+        <input type="radio" id="emotion_btn1" name="emotion" value="Amusement" checked="checked">
+        <LABEL>Amusement</LABEL>
+        <input type="radio" id="emotion_btn2" name="emotion" value="Anger">
+        <LABEL>Anger</LABEL>
+        <input type="radio" id="emotion_btn3" name="emotion" value="Awe">
+        <LABEL>Awe</LABEL>
+        <input type="radio" id="emotion_btn4" name="emotion" value="Content">
+        <LABEL>Content</LABEL>
+
+        <input type="radio" id="emotion_btn5" name="emotion" value="Disgust">
+        <LABEL>Disgust</LABEL>
+        <input type="radio" id="emotion_btn6" name="emotion" value="Excitement">
+        <LABEL>Excitement</LABEL>
+        <input type="radio" id="emotion_btn7" name="emotion" value="Fear">
+        <LABEL>Fear</LABEL>
+        <input type="radio" id="emotion_btn8" name="emotion" value="Sad">
+        <LABEL>Sad</LABEL>
+
+        </form>
+    </div>
+    <div class="outer_div" id="year_chart">
+
+    </div>
+{% endblock %}

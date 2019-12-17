@@ -1,0 +1,50 @@
+{%  extends "layout.html" %}
+{% block head %}
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+
+    <!-- Function for radial charts -->
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'nationality.js') }}"></script>
+
+    <style>
+        #emotion_buttons_nationality {
+            padding-left: 300px;
+        }
+
+        #emotion_buttons_nationality label {
+            margin-right: 30px;
+        }
+
+        #nationality_chart {
+            padding-left: 350px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <div id="emotion_buttons_nationality">
+        <input type="radio" id="emotion_btn1_nationality" name="emotion" value="Amusement" checked>
+        <LABEL>Amusement</LABEL>
+        <input type="radio" id="emotion_btn2_nationality" name="emotion" value="Anger">
+        <LABEL>Anger</LABEL>
+        <input type="radio" id="emotion_btn3_nationality" name="emotion" value="Awe">
+        <LABEL>Awe</LABEL>
+        <input type="radio" id="emotion_btn4_nationality" name="emotion" value="Content">
+        <LABEL>Content</LABEL>
+
+        <input type="radio" id="emotion_btn5_nationality" name="emotion" value="Disgust">
+        <LABEL>Disgust</LABEL>
+        <input type="radio" id="emotion_btn6_nationality" name="emotion" value="Excitement">
+        <LABEL>Excitement</LABEL>
+        <input type="radio" id="emotion_btn7_nationality" name="emotion" value="Fear">
+        <LABEL>Fear</LABEL>
+        <input type="radio" id="emotion_btn8_nationality" name="emotion" value="Sad">
+        <LABEL>Sad</LABEL>
+    </div>
+    <div id="nationality_chart"></div>
+{% endblock %}
